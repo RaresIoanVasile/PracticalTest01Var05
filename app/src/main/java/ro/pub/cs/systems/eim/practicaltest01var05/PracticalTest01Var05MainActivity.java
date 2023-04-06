@@ -3,8 +3,12 @@ package ro.pub.cs.systems.eim.practicaltest01var05;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,6 +17,17 @@ import android.widget.Toast;
 public class PracticalTest01Var05MainActivity extends AppCompatActivity {
 
     int nrClicks = 0;
+
+    private class MessageBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("un_tag", intent.getStringExtra("mesaj_thread"));
+        }
+    }
+
+    private IntentFilter intentFilter = new IntentFilter();
+
+    private MessageBroadcastReceiver messageBroadcastReceiver = new MessageBroadcastReceiver();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +73,11 @@ public class PracticalTest01Var05MainActivity extends AppCompatActivity {
                     textView.setText(str);
                 }
                 nrClicks += 1;
+                if (nrClicks > 5) {
+                    Intent intent1 = new Intent(getApplicationContext(), PracticalTest01Var05Service.class);
+                    intent1.putExtra("sablon", String.valueOf(textView.getText()));
+                    getApplicationContext().startService(intent1);
+                }
             }
         });
 
@@ -72,6 +92,11 @@ public class PracticalTest01Var05MainActivity extends AppCompatActivity {
                     textView.setText(str);
                 }
                 nrClicks += 1;
+                if (nrClicks > 5) {
+                    Intent intent1 = new Intent(getApplicationContext(), PracticalTest01Var05Service.class);
+                    intent1.putExtra("sablon", String.valueOf(textView.getText()));
+                    getApplicationContext().startService(intent1);
+                }
             }
         });
 
@@ -86,6 +111,11 @@ public class PracticalTest01Var05MainActivity extends AppCompatActivity {
                     textView.setText(str);
                 }
                 nrClicks += 1;
+                if (nrClicks > 5) {
+                    Intent intent1 = new Intent(getApplicationContext(), PracticalTest01Var05Service.class);
+                    intent1.putExtra("sablon", String.valueOf(textView.getText()));
+                    getApplicationContext().startService(intent1);
+                }
             }
         });
 
@@ -100,6 +130,11 @@ public class PracticalTest01Var05MainActivity extends AppCompatActivity {
                     textView.setText(str);
                 }
                 nrClicks += 1;
+                if (nrClicks > 5) {
+                    Intent intent1 = new Intent(getApplicationContext(), PracticalTest01Var05Service.class);
+                    intent1.putExtra("sablon", String.valueOf(textView.getText()));
+                    getApplicationContext().startService(intent1);
+                }
             }
         });
 
@@ -114,6 +149,11 @@ public class PracticalTest01Var05MainActivity extends AppCompatActivity {
                     textView.setText(str);
                 }
                 nrClicks += 1;
+                if (nrClicks > 5) {
+                    Intent intent1 = new Intent(getApplicationContext(), PracticalTest01Var05Service.class);
+                    intent1.putExtra("sablon", String.valueOf(textView.getText()));
+                    getApplicationContext().startService(intent1);
+                }
             }
         });
     }
@@ -140,5 +180,24 @@ public class PracticalTest01Var05MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Cancel", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(messageBroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(messageBroadcastReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Intent intent = new Intent(this, PracticalTest01Var05Service.class);
+        stopService(intent);
+        super.onDestroy();
     }
 }
